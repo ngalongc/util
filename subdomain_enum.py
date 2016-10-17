@@ -16,7 +16,7 @@ def found_print(output):
 def help():
     print info_print("Usage: {0} example.com 1".format(sys.argv[0]))
     print info_print("Flag 1 : Automate all the process through 2-4")
-    print info_print("Flag 2 : Just do subbrute")
+    print info_print("Flag 2 : Just do sublist3r")
     print info_print("Flag 3 : Just do host")
     print info_print("Flag 4 : Just do result analysis")
     print info_print("Flag 5 : Just do nmap port scan")
@@ -28,11 +28,11 @@ if len(sys.argv) != 3:
 
 option = int(sys.argv[2])
 target = sys.argv[1]
-full_path_output_dir = "/home/scan/wargame/{0}".format(target)
-subbrute_result_location = "{0}/{1}_subbrute_result".format(full_path_output_dir,target)
-host_result_location= full_path_output_dir+"/"+target+"_host_lookup_result"
-unique_hostname_location = full_path_output_dir + "/" + target + "_unique_hostname_result"
-unique_ip_location = full_path_output_dir + "/" + target + "_unique_ip_result"
+relative_path_output_dir = "{0}".format(target)
+subbrute_result_location = "{0}/{1}_subbrute_result".format(relative_path_output_dir,target)
+host_result_location= relative_path_output_dir+"/"+target+"_host_lookup_result"
+unique_hostname_location = relative_path_output_dir + "/" + target + "_unique_hostname_result"
+unique_ip_location = relative_path_output_dir + "/" + target + "_unique_ip_result"
 
 
 def run_cmd(cmd):
@@ -40,8 +40,8 @@ def run_cmd(cmd):
 
 
 def start_subbrute(target):
-    run_cmd("mkdir -p {0}".format(full_path_output_dir))
-    run_cmd("subbrute/subbrute.py {0} -o {1}".format(target,subbrute_result_location))
+    run_cmd("mkdir -p {0}".format(relative_path_output_dir))
+    run_cmd("sublist3r -d {0} -t 20 -p80,443 -o {1}".format(target,subbrute_result_location)) # rmb to add subbrute to exe path /usr/local/bin
 
 
 def start_host(target):
@@ -103,7 +103,4 @@ def main():
         print info_print("Start result analysis")
         start_analysis(target)
         print info_print("Result analysis finish")
-
-
 main()
-
