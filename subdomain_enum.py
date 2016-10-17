@@ -16,10 +16,10 @@ def found_print(output):
 def help():
     print info_print("Usage: {0} example.com 1".format(sys.argv[0]))
     print info_print("Flag 1 : Automate all the process through 2-4")
-    print info_print("Flag 2 : Just do sublist3r")
-    print info_print("Flag 3 : Just do host")
-    print info_print("Flag 4 : Just do result analysis")
-    print info_print("Flag 5 : Just do nmap port scan")
+    print info_print("Flag 2 : Do sublist3r")
+    print info_print("Flag 3 : Do host")
+    print info_print("Flag 4 : Do result analysis")
+    print info_print("Flag 5 : Do dirsearch")
 
     sys.exit(1)
 
@@ -33,6 +33,7 @@ subbrute_result_location = "{0}/{1}_subbrute_result".format(relative_path_output
 host_result_location= relative_path_output_dir+"/"+target+"_host_lookup_result"
 unique_hostname_location = relative_path_output_dir + "/" + target + "_unique_hostname_result"
 unique_ip_location = relative_path_output_dir + "/" + target + "_unique_ip_result"
+dirsearch_result_location = relative_path_output_dir + "/" + target + "_dirsearch__result"
 
 
 def run_cmd(cmd):
@@ -45,6 +46,7 @@ def start_subbrute(target):
 
 
 def start_host(target):
+    run_cmd("mkdir -p {0}".format(relative_path_output_dir))
     if os.path.isfile(subbrute_result_location):
         with open(subbrute_result_location,'r') as f:
             for hostname in f.readlines():
@@ -55,6 +57,7 @@ def start_host(target):
                     print debug_print("Please go back and run option 2 first")
 
 def start_analysis(target):
+    run_cmd("mkdir -p {0}".format(relative_path_output_dir))
     if os.path.isfile(host_result_location):
         with open(host_result_location,'r') as f:
             hostname_list = []
@@ -85,6 +88,12 @@ def start_analysis(target):
     else:
         print debug_print("Please go back and run option 3 first")
 
+def start_dirsearch(target):
+# Assume they use https
+    run_cmd("mkdir -p {0}".format(relative_path_output_dir))
+    run_cmd("dirsearch -u " + target +" -e php,asp,jsp,html -t 20 --random-agents --plain-text-report="+ dirsearch_result_location +" -w wordlists") # rmb to provide wordlists here
+
+
 def main():
     if option == 2:
         #Start subbrute first
@@ -103,4 +112,7 @@ def main():
         print info_print("Start result analysis")
         start_analysis(target)
         print info_print("Result analysis finish")
+    if option == 5:
+        start_dirsearch(target)
+        print info_print("dirbrute")
 main()
